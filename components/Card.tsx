@@ -20,7 +20,7 @@ const Card = ({
   image = "https://via.placeholder.com/150",
 }: Props) => {
   return (
-    <Box alignItems="center">
+    <Box alignItems="center" marginBottom='2'>
       <Box
         maxW="80"
         rounded="lg"
@@ -42,7 +42,7 @@ const Card = ({
         <Stack p="4" space={3}>
           <Stack space={2}>
             <Heading size="md" ml="-1">
-              The Garden City
+              {title}
             </Heading>
             <Text
               fontSize="xs"
@@ -56,12 +56,11 @@ const Card = ({
               ml="-0.5"
               mt="-1"
             >
-              The Silicon Valley of India.
+              Verifiable Credentials
             </Text>
           </Stack>
-          <Text fontWeight="400"   color="white">
-            Bengaluru (also called Bangalore) is the center of India's high-tech
-            industry. The city is also known for its parks and nightlife.
+          <Text fontWeight="400" >
+            {description}
           </Text>
           <HStack alignItems="center" space={4} justifyContent="space-between">
             <HStack alignItems="center">

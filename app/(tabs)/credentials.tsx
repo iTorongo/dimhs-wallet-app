@@ -18,7 +18,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Card from "../../components/Card";
 
 export default function CredentialScreen() {
-  const [credentials, setCredentials] = useState();
+  const [credentials, setCredentials] = useState<any>([]);
   const isFocused = useIsFocused()
 
   const getStoredCredentials = () => {
@@ -55,19 +55,15 @@ export default function CredentialScreen() {
   return (
     <Center>
       <ScrollView style={styles.cardContainer}>
-   
-        <Card title="Lorem Insdum Tolem" description="Lorem ispunm todasdk dsakdksajd kajdksa daksjd aksd " />
+        {credentials?.map((credential: any) => {
+          return <Card title={credential?.cred_def_id} description={JSON.stringify(credential?.attrs, null, 4)} />  
+        })}
       </ScrollView>
     </Center>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   cardContainer : {
     marginTop: 16
   },
