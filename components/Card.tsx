@@ -1,29 +1,17 @@
 import React from "react";
-import {
-  Box,
-  Heading,
-  Text,
-  Center,
-  HStack,
-  Stack,
-} from "native-base";
+import { Box, Heading, Text, Center, HStack, Stack } from "native-base";
+import { StyleSheet } from "react-native";
 
-// const LinearGradient = require('expo-linear-gradient').LinearGradient;
-// const config = {
-//     dependencies: {
-//       'linear-gradient': LinearGradient
-//     }
-//   };
 const Card = ({
   title,
   description,
   image = "https://via.placeholder.com/150",
 }: Props) => {
   return (
-    <Box alignItems="center" marginBottom='2'>
+    <Box rounded="2xl" style={styles.card}>
       <Box
-        maxW="80"
-        rounded="lg"
+        width="sm"
+        rounded="2xl"
         overflow="hidden"
         borderColor="coolGray.200"
         borderWidth="1"
@@ -39,15 +27,17 @@ const Card = ({
           backgroundColor: "tertiary.400",
         }}
       >
-        <Stack p="4" space={3}>
-          <Stack space={2}>
-            <Heading size="md" ml="-1">
-              {title}
-            </Heading>
+        <HStack alignItems="center" backgroundColor="indigo.600" px="4" py="1">
+          <Heading size="sm" ml="-1" color="white">
+            Credentials of {title}
+          </Heading>
+        </HStack>
+        <Stack p="4">
+          {/* <Stack space={2}>
             <Text
-              fontSize="xs"
+              fontSize="sm"
               _light={{
-                color: "violet.500",
+                color: "violet.700",
               }}
               _dark={{
                 color: "violet.400",
@@ -56,13 +46,10 @@ const Card = ({
               ml="-0.5"
               mt="-1"
             >
-              Verifiable Credentials
             </Text>
-          </Stack>
-          <Text fontWeight="400" >
-            {description}
-          </Text>
-          <HStack alignItems="center" space={4} justifyContent="space-between">
+          </Stack> */}
+          <Text fontWeight="400">{description}</Text>
+          {/* <HStack alignItems="center" space={4} justifyContent="space-between" mt='2'>
             <HStack alignItems="center">
               <Text
                 color="coolGray.600"
@@ -71,10 +58,10 @@ const Card = ({
                 }}
                 fontWeight="400"
               >
-                6 mins ago
+                0 mins ago
               </Text>
             </HStack>
-          </HStack>
+          </HStack> */}
         </Stack>
       </Box>
     </Box>
@@ -85,6 +72,19 @@ export default Card;
 
 interface Props {
   title: string;
-  description?: string;
+  description?: string | JSX.Element;
   image?: string;
 }
+
+const styles = StyleSheet.create({
+  card: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 4,
+  },
+});

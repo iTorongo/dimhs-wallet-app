@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { StyleSheet, RefreshControl } from "react-native";
 import { EmptyListMessage } from "../../components/EmptyListMessage";
 import { View } from "../../components/Themed";
 import { getConnections } from "../api/services";
@@ -13,26 +13,39 @@ import {
   FlatList,
   HStack,
   VStack,
-  ScrollView,
   IconButton,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function ConnectionScreen() {
+  const [refreshing, setRefreshing] = React.useState(false);
   const [connections, setConnections] = useState();
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    console.log("Render");
+  const getConnectionList = () => {
     getConnections()
       .then((res) => {
         setConnections(res.data.results);
         console.log(res.data);
+        setRefreshing(false);
       })
       .catch((err) => {
         console.log("connection", err.config);
+        setRefreshing(false);
       });
+  };
+
+  useEffect(() => {
+    console.log("Render");
+    if (isFocused) {
+      getConnectionList();
+    }
   }, [isFocused]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getConnectionList();
+  }, []);
 
   const getStateStatus = (
     state: "active" | "invitation" | "completed" | "request" | "response"
@@ -50,61 +63,68 @@ export default function ConnectionScreen() {
     }
   };
   return (
-    <ScrollView>
-      <FlatList
-        data={connections}
-        ListEmptyComponent={<EmptyListMessage />}
-        renderItem={({ item }: { item: any }) => (
-          <View style={styles.item}>
-            <HStack justifyContent='space-between'>
-              <VStack>
-                <Heading size="md" mb="1">
-                  {item.their_label}
-                </Heading>
-                <Text>
-                  <Badge
-                    colorScheme={getStateStatus(item.state)}
-                    borderRadius="md"
-                    paddingX="0.5"
-                  >
-                    <Text>{item.state}</Text>
-                  </Badge>
-                </Text>
-                <Text
-                  color="coolGray.600"
-                  _dark={{
-                    color: "warmGray.200",
-                  }}
-                  fontWeight="400"
-                  fontSize="xs"
+    <FlatList
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      data={connections}
+      ListEmptyComponent={
+        <EmptyListMessage image="process" text="No connection available!" />
+      }
+      renderItem={({ item }: { item: any }) => (
+        <View style={styles.item}>
+          <HStack justifyContent="space-between">
+            <VStack>
+              <Heading size="md" mb="1">
+                {item.their_label}
+              </Heading>
+              <Text>
+                <Badge
+                  colorScheme={getStateStatus(item.state)}
+                  variant="solid"
+                  borderRadius="sm"
+                  paddingX="0.5"
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
                 >
-                  Last Update: {formattedDateTime(item.updated_at)}
-                </Text>
-              </VStack>
-              <VStack alignItems='center' justifyContent='center'>
-                <IconButton
-                  size="sm"
-                  variant="outline"
-                  colorScheme="danger"
-                  _icon={{
-                    as: AntDesign,
-                    name: "delete",
-                  }}
-                />
-              </VStack>
-            </HStack>
-          </View>
-        )}
-      />
-    </ScrollView>
+                  <Text color="white" fontSize="sm">
+                    {item.state}
+                  </Text>
+                </Badge>
+              </Text>
+              <Text
+                color="coolGray.600"
+                _dark={{
+                  color: "warmGray.200",
+                }}
+                fontWeight="400"
+                fontSize="xs"
+                marginTop="1"
+              >
+                Last Update: {formattedDateTime(item.updated_at)}
+              </Text>
+            </VStack>
+            <VStack alignItems="center" justifyContent="center">
+              <IconButton
+                size="sm"
+                variant="outline"
+                colorScheme="danger"
+                _icon={{
+                  as: AntDesign,
+                  name: "delete",
+                }}
+              />
+            </VStack>
+          </HStack>
+        </View>
+      )}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#fff",
   },
 
   item: {
@@ -114,6 +134,14 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: "#bae6fd",
-    backgroundColor: "#f0f9ff",
+    backgroundColor: "#bae6fd",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 4
   },
 });

@@ -1,4 +1,4 @@
-import { Modal, Center, Button } from "native-base";
+import { Modal, Center, Button, Text } from "native-base";
 import { useEffect, useState } from "react";
 
 import { StyleSheet } from "react-native";
@@ -25,21 +25,21 @@ export const ConfirmModal = ({ openModal, onCloseConfirmModal, onConfirm, text }
         <Modal.Content maxWidth="400px">
           <Modal.CloseButton />
           <Modal.Header>Connection Request</Modal.Header>
-          <Modal.Body>Would you like to connect with {text} ?</Modal.Body>
-          <Modal.Footer  style={styles.buttonGroup}>
+          <Modal.Body><Text bold>{text} </Text>has invited you to connect!</Modal.Body>
+          <Modal.Footer style={styles.buttonGroup}>
             <Button.Group space={2}>
-              <Button
-                onPress={onfConfirmModal}
-                colorScheme='green'
-              >
-                Accept
-              </Button>
               <Button
                 variant="ghost"
                 colorScheme="secondary"
                 onPress={onCloseModal}
               >
                 Decline
+              </Button>
+              <Button
+                onPress={onfConfirmModal}
+                colorScheme='green'
+              >
+                Accept
               </Button>
             </Button.Group>
           </Modal.Footer>

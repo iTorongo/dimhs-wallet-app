@@ -39,3 +39,8 @@ export const getSchemaDetailsFromId = (str: string) => {
   const arr = str.split(":");
   return arr;
 };
+
+export const getCredentialDetailsFromId = (str: string) => {
+  const arr = str.split(".");
+  return arr;
+};

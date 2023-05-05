@@ -1,7 +1,7 @@
 import { StyleSheet } from "@bacons/react-views";
 import { Text, View, Center, Image } from "native-base";
 
-export const EmptyListMessage = ({ text, image }: Props) => {
+export const EmptyCredential= ({ text, image }: Props) => {
  
 
   return (
@@ -10,7 +10,7 @@ export const EmptyListMessage = ({ text, image }: Props) => {
         {/* <FontAwesome size={28}  name='folder-open' /> */}
         <Center>
           <Image
-            source={ require('./img/connection.png')}
+            source={ require('./img/card.png')}
             alt="Alternate Text"
             size="2xl"
           />

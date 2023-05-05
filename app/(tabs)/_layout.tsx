@@ -20,13 +20,13 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: "#6366f1",
       }}>
       <Tabs.Screen
         name="credentials"
         options={{
           title: 'Credentials',
-          tabBarIcon: ({ color }) => <TabBarIcon name='home' color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name='vcard-o' color={color} />,
         }}
       />
       <Tabs.Screen

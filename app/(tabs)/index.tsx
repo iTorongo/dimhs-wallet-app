@@ -110,7 +110,7 @@ export default function ScanScreen() {
             />
           </View>
         ) : (
-          <Button variant='solid' colorScheme='blue' size="lg" onPress={startScanning}>
+          <Button variant='solid' colorScheme='indigo' size="lg" onPress={startScanning}>
               Start Scanning...
           </Button>
         )}
