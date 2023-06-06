@@ -24,10 +24,10 @@ const Card = ({
           borderWidth: 0,
         }}
         _light={{
-          backgroundColor: "tertiary.400",
+          backgroundColor: "#E3F0FF",
         }}
       >
-        <HStack alignItems="center" backgroundColor="indigo.600" px="4" py="1">
+        <HStack alignItems="center" backgroundColor="indigo.600" px="4" py="3">
           <Heading size="sm" ml="-1" color="white">
             Credentials of {title}
           </Heading>

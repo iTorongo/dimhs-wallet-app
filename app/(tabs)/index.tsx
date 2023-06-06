@@ -1,26 +1,30 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
-import { Button } from "native-base";
 import { BarCodeScanner, PermissionStatus } from "expo-barcode-scanner";
 import { Text, View } from "../../components/Themed";
 import queryString from "query-string";
 import base64 from "react-native-base64";
-import { acceptConnectionInvitation, receiveConnectionInvitation } from "../api/services";
+import {
+  acceptConnectionInvitation,
+  receiveConnectionInvitation,
+} from "../api/services";
 import { ConfirmModal } from "../../components/ConfirmModal";
 import { AlertMessage } from "../../components/AlertMessage";
-import { useIsFocused } from '@react-navigation/native';
-
+import { useIsFocused } from "@react-navigation/native";
+import { TextArea, VStack, Button, FormControl, HStack } from "native-base";
 
 export default function ScanScreen() {
   const [startScan, setStartScan] = useState(false);
+  const [startManual, setStartManual] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [showConnectionAlert, setShowConnectionAlert] = useState(false);
   const [connectionInvitation, setConnectionInvitation] = useState<any>();
+  const [formData, setFormData] = useState<any>();
 
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
 
-  console.log('render')
+  console.log("render");
 
   const askForCameraPermission = () => {
     (async () => {
@@ -35,14 +39,17 @@ export default function ScanScreen() {
   }, []);
 
   const startScanning = () => {
-    setStartScan(true)
-    setShowConnectionAlert(false)
-  }
+    setStartScan(true);
+    setShowConnectionAlert(false);
+  };
+
+  const displayManual = () => {
+    setStartManual(true);
+  };
 
   const handleBarCodeScanned = ({ type, data }: any) => {
     let parsed = queryString.parseUrl(data).query.c_i;
-    const parsedObj = 
-      JSON.parse(base64.decode(`${parsed}`))
+    const parsedObj = JSON.parse(base64.decode(`${parsed}`));
     setConnectionInvitation(parsedObj);
     setOpenConfirmModal(true);
     setStartScan(false);
@@ -63,19 +70,32 @@ export default function ScanScreen() {
   // };
   const handleAcceptConnection = async () => {
     try {
-      const receivedInvitation = await receiveConnectionInvitation(connectionInvitation);
-      const acceptedInvitation = await acceptConnectionInvitation(receivedInvitation?.data?.connection_id);
+      const receivedInvitation = await receiveConnectionInvitation(
+        connectionInvitation
+      );
+      const acceptedInvitation = await acceptConnectionInvitation(
+        receivedInvitation?.data?.connection_id
+      );
       setConnectionInvitation(acceptedInvitation.data);
       setShowConnectionAlert(true);
     } catch (err) {
-      console.log('Error:', err);
+      console.log("Error:", err);
     }
   };
 
   const onAcceptConnection = () => {
     setOpenConfirmModal(false);
     console.log("Hey");
-    handleAcceptConnection()
+    handleAcceptConnection();
+  };
+
+  const onSubmit = () => {
+    console.log(formData);
+    const parsedObj = JSON.parse(formData);
+    setConnectionInvitation(parsedObj);
+    console.log(connectionInvitation);
+    setOpenConfirmModal(true);
+    setStartScan(false);
   };
 
   // Check permissions and return the screens
@@ -100,6 +120,54 @@ export default function ScanScreen() {
   // Return the View
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <View style={styles.containerManual}>
+        {startManual ? (
+          <View>
+            <VStack width="90%" mx="3" maxW="300px">
+              <FormControl>
+                <FormControl.Label
+                  _text={{
+                    bold: true,
+                  }}
+                >
+                  Invitation
+                </FormControl.Label>
+                <TextArea
+                  h={150}
+                  placeholder="Pase connection invitation"
+                  w="75%"
+                  maxW="300px"
+                  autoCompleteType={false}
+                  onChangeText={(value) => setFormData(value)}
+                />
+              </FormControl>
+
+              <HStack  mt="5" space={2}>
+                <Button onPress={onSubmit} size="sm" colorScheme="green">
+                  Connect
+                </Button>
+                <Button
+                 variant="ghost"
+                  size="sm"
+                  onPress={() => setStartManual(false)}
+                  colorScheme="secondary"
+                >
+                  Close
+                </Button>
+              </HStack>
+            </VStack>
+          </View>
+        ) : (
+          <Button
+            variant="solid"
+            bg='blue.500'
+            size="sm"
+            onPress={displayManual}
+          >
+            Connect Manually
+          </Button>
+        )}
+      </View>
       <View style={styles.container}>
         {startScan ? (
           <View style={styles.barcodebox}>
@@ -110,8 +178,13 @@ export default function ScanScreen() {
             />
           </View>
         ) : (
-          <Button variant='solid' colorScheme='indigo' size="lg" onPress={startScanning}>
-              Start Scanning...
+          <Button
+            variant="solid"
+            colorScheme="indigo"
+            size="lg"
+            onPress={startScanning}
+          >
+            Start Scanning...
           </Button>
         )}
       </View>
@@ -138,6 +211,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  containerManual: {
+    marginTop: 20,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",

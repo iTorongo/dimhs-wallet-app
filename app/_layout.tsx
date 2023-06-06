@@ -47,7 +47,7 @@ function RootLayoutNav() {
         {/* <AppHeader /> */}
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal', title:'Proof Request', headerTitleAlign:'center' }} />
         </Stack>
       </ThemeProvider>
       </NativeBaseProvider>

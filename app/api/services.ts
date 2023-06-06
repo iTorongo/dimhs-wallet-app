@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://192.168.1.3:8081/",
+  // baseURL: "http://192.168.1.3:8081/",
+  baseURL: "http://localhost:8031/",
   headers: {
     "Content-type": "application/json",
   },
@@ -61,3 +62,13 @@ export const getCredentialsFromWallet = () => {
 export const storeCredentialToWallet = (credExchangeId: string) => {
   return apiClient.post(`/issue-credential/records/${credExchangeId}/store`);
 };
+
+
+export const getPresentProofRequest = () => {
+  return apiClient.get("present-proof/records");
+};
+
+export const senProofPresentation = (presExchangeId: string, requestBody: any) => {
+  return apiClient.post(`/present-proof/records/${presExchangeId}/send-presentation`, requestBody);
+};
+
